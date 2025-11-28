@@ -1,66 +1,56 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+interface DataProps {
+  id: number;
+  name: string;
+  full_name: string;
+  owner: {
+    login: string;
+    id: number;
+    avatar_url: string;
+    url: string;
+  };
+}
 
-export default function Home() {
+async function delayFetch(url: string, delay: number) {
+  await new Promise((resolve) => setTimeout(resolve, delay));
+  const response = await fetch(url);
+  return response.json();
+}
+
+// async function getData() {
+//   // https://api.github.com/users/alessandropedroso/repos
+//   const response = await fetch(
+//     "https://api.github.com/users/alessandropedroso/repos"
+//   );
+//   return response.json();
+// }
+
+async function getData() {
+  const data = await delayFetch(
+    "https://api.github.com/users/alessandropedroso/repos",
+    3050
+  );
+  return data;
+}
+
+export default async function Home() {
+  const data: DataProps[] = await getData();
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main>
+      <h1>Página Home</h1>
+      <span>Seja bem vindo a página Home</span>
+      <br />
+
+      <h3>Meus repositorios</h3>
+
+      {data.map((item) => (
+        <div key={item.id}>
+          <strong>Repositório: </strong>
+          <a href="#">{item.name}</a>
+          <br />
+          <br />
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      ))}
+    </main>
   );
 }

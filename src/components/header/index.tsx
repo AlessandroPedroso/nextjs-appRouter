@@ -11,6 +11,8 @@ export function Header() {
       <br />
       <Link href="/repositorios">Repositórios</Link>
       <br />
+      <Link href="/dashboard">Painel</Link>
+      <br />
 
       <br />
       <br />
